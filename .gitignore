@@ -1,0 +1,13 @@
+t_storeDB/
+venv/
+
+#
+
+.DS_Store
+chromedriver
+mysql_206
+.env
+teste.py
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
