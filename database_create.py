@@ -61,6 +61,7 @@ with connection:
             'brand VARCHAR(50) NOT NULL, '
             'buying_price INT NOT NULL, '
             'selling_price INT NOT NULL, '
+            'quantity INT NOT NULL, '
             'PRIMARY KEY (id)'
             ')'
         )

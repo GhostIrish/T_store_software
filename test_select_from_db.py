@@ -22,7 +22,7 @@ with connection:
         date = (
             f'SELECT p.id, p.model_product, ptype.type_name AS product_type, '
             f's.size_name AS size, genderp.gender AS gender_product, '
-            f'b.brand_name AS brand, p.buying_price, p.selling_price '
+            f'b.brand_name AS brand, p.buying_price, p.selling_price, p.quantity '
             f'FROM {TABLE_NAME} p '
             f'INNER JOIN product_types ptype ON p.product_type = ptype.id '
             f'INNER JOIN sizes s ON p.size = s.id '
