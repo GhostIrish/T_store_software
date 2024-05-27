@@ -2,6 +2,10 @@ import os
 import requests
 
 
+# this part is a playground, where i test the connection and API functions before i create the real GUI for my project
+# i don't make the update method yet, because i'm waiting to finish development my GUI. In this menu, create a way to make this possible,
+# it's a waste of time.
+
 running = True
 
 def show_products(response_):
@@ -24,6 +28,7 @@ while running:
 [4] Exit
     '''
     print(menu)
+    # the inputs returns a dict 'product'
     product = {}
     option = str(input('Option: ')).strip()
     print()
@@ -37,7 +42,9 @@ while running:
         product["selling_price"] = int(input('Price you sell: '))
         product["quantity"] = int(input('Product Quantity: '))
         print()
+        
         print(f'You really want to add this cloth -> {product}')
+        # after create, if you really want to put the dict in db, write Y.
         confirm = str(input('Y/N: ')).strip().upper()
         if confirm == 'Y':
             response = requests.post('http://localhost:5000/api/add_product', json=product)
@@ -53,6 +60,7 @@ while running:
 
 
     if option == '2':
+        # if you choose the second option, you want to show db infos.
         choice = str(input('Show all or specify products[All/Spe]: ')).strip().capitalize() 
         print()
         if choice == 'All':
@@ -68,6 +76,7 @@ while running:
 
     
     if option == '3':
+        # it's to test delete in project, i did not leave the user delete all database in this case.
         response_ = requests.get(f'http://localhost:5000/api/products')
         show_products(response_)
         

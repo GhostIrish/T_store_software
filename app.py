@@ -18,6 +18,7 @@ connection = pymysql.connect(
     cursorclass=pymysql.cursors.SSDictCursor
 )
 
+# create function to get infos from our database.
 @app.route('/api/products', methods=['GET'])
 def get_products():
     model_product = request.args.get('model_product')
@@ -45,7 +46,8 @@ def get_products():
     return jsonify(products)
 
 
-
+# create function to add dict into database
+# this function recept the dict from any method, with me, the front send me infos in one dict, i send him to database.
 @app.route('/api/add_product', methods=['POST'])
 def add_product():
     try:
@@ -66,6 +68,7 @@ def add_product():
 
 
 
+# delete product from database using the id.
 @app.route('/api/delete_product', methods=['DELETE'])
 def delete_product():
     product_id = request.args.get('id')
@@ -79,6 +82,8 @@ def delete_product():
     else:
         return jsonify(message='Product id is required to delete'), 400
         
+
+# it's for tests, just ignore
 if __name__ == '__main__':
     app.run()
     get_products()

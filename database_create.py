@@ -6,8 +6,10 @@ import os
 # load your .env file
 load_dotenv()
 
+# define table_name in db
 TABLE_NAME = 'product'
 
+# making connection with my database
 connection = pymysql.connect(
     host=os.environ['MYSQL_HOST'],
     user=os.environ['MYSQL_USER'],
@@ -17,6 +19,7 @@ connection = pymysql.connect(
     cursorclass=pymysql.cursors.SSDictCursor
 )
 
+# all of this is for create a database and add all rules i need to this project.
 with connection:
     with connection.cursor() as cursor:
         cursor.execute(
@@ -66,7 +69,7 @@ with connection:
             ')'
         )
         
-        #insert into support tables  :)
+        #insert into support tables - :)
         # cursor.executemany(
         #     'INSERT INTO product_types (type_name) VALUES (%s)',
         #     [('T-shirt',), ('Pants',), ('Jacket',)]
@@ -90,8 +93,8 @@ with connection:
         
         
         # -------------------------------------------------------------------------------------------------------------------------
-        # add_foreign key
-        
+       
+        # add_foreign key -
         # cursor.execute(
         #     f'ALTER TABLE {TABLE_NAME} ADD CONSTRAINT ct_type_id FOREIGN KEY (product_type) REFERENCES product_types(id) '
         # )
@@ -110,7 +113,7 @@ with connection:
 
 
         # -------------------------------------------------------------------------------------------------------------------------
-        # insert example   :)
+        # insert example -  :)
         
         # cursor.execute(
         #     f'INSERT INTO {TABLE_NAME} (model_product, product_type, size, gender_product, brand, buying_price, selling_price) '
