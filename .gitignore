@@ -9,6 +9,8 @@ chromedriver
 mysql_206
 .env
 teste.py
+icon_1.ico
+tkinterfront.spec
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
