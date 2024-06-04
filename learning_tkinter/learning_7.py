@@ -37,6 +37,7 @@ try:
 except requests.exceptions.RequestException as e:
     textbox.insert("1.0", f"An error occurred: {e}")
 
+###
 # Executar o loop principal
 window.mainloop()
 
