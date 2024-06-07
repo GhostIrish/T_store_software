@@ -10,7 +10,7 @@ class SearchProductFrame(ctk.CTkFrame):
         
         def show_tree():
             # Sample data to be displayed in the Treeview
-            list_names = [['0', 'Hariel', 'harie@hotmail.com'], ['1', 'Beatriz', 'irangs41@gmail.com'], ['2', 'Miguel', 'miguelpatrulha25@gmail.com']]
+            list_names = [['0', 'Hariel', 'harie@hotmail.com'], ['1', 'Beatriz', 'bea@gmail.com'], ['2', 'Miguel', 'miguelpatrulha@gmail.com']]
             
             # Create a Treeview widget with specified columns
             tree_view = ttk.Treeview(self.tree_view_frame, columns=('id', 'name', 'email'), show='headings')
