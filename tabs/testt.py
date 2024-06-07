@@ -16,7 +16,7 @@ class SearchProductFrame(ctk.CTkFrame):
             tree_view = ttk.Treeview(self.tree_view_frame, columns=('id', 'name', 'email'), show='headings')
             
             # Configure the column widths
-            tree_view.column('id', minwidth=0, width=50)
+            tree_view.column('id', minwidth=0, width=20)
             tree_view.column('name', minwidth=0, width=250)
             tree_view.column('email', minwidth=0, width=300)
             
@@ -55,7 +55,7 @@ class SearchProductFrame(ctk.CTkFrame):
         btn.pack(side="left", padx=5)
 
         # Create and pack the frame for the Treeview, with fixed size
-        self.tree_view_frame = ctk.CTkFrame(self, width=600, height=200)
+        self.tree_view_frame = ctk.CTkFrame(self, width=800, height=400)
         self.tree_view_frame.pack(pady=10, expand=True)
         self.tree_view_frame.pack_propagate(False)
 
