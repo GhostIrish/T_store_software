@@ -1,17 +1,9 @@
 import customtkinter as ctk
+from tkinter import ttk
 
 class SearchProductFrame(ctk.CTkFrame):
     def __init__(self, master, **kwargs):
         super().__init__(master, **kwargs)
-        self.create_widgets()
-
-    def create_widgets(self):
-        def print_entry_text():
-            text = search_bar.get()
-            textbox.insert('1.0', text=(text + ' ') * 1000, tags='highlight')
-
-            search_bar.delete(first_index=0, last_index=len(text))
-
 
         label_search = ctk.CTkLabel(self, text="Search Product", text_color="white", font=("Arial", 20))
         label_search.pack(pady=20, padx=20)
@@ -22,12 +14,33 @@ class SearchProductFrame(ctk.CTkFrame):
         search_bar = ctk.CTkEntry(search_frame, width=600, placeholder_text='Product to search')
         search_bar.pack(side="left", padx=5)
 
-        btn = ctk.CTkButton(search_frame, width=100, text='Print', command=print_entry_text)
+        btn = ctk.CTkButton(search_frame, width=100, text='Print')
         btn.pack(side="left", padx=5)
+        
+        
+        
+        # Sample data to be displayed in the Treeview
+        list_names = [['0', 'Hariel', 'harie@hotmail.com'], ['1', 'Beatriz', 'bea@gmail.com'], ['2', 'Miguel', 'miguelpatrulha@gmail.com']]
 
-        textbox = ctk.CTkTextbox(self, width=800, height=450, scrollbar_button_color="green", fg_color="black",
-                                 border_width=1, border_color="green", border_spacing=20, activate_scrollbars=True, scrollbar_button_hover_color='black')
-        textbox.pack(pady=10)
 
-        textbox.tag_config("highlight", wrap='word', foreground="green", background="black")
-        #textbox.insert('1.0', text='test' * 1000)
+        self.tree_view_frame = ctk.CTkFrame(self, width=800, height=400)
+        tree_view = ttk.Treeview(self.tree_view_frame, columns=('id', 'name', 'email'), show='headings')
+        tree_view.column('id', minwidth=50, width=200)
+        tree_view.column('name', minwidth=50, width=300)
+        tree_view.column('email', minwidth=50, width=300)
+        tree_view.heading('id', text='ID')
+        tree_view.heading('name', text='NAME')
+        tree_view.heading('email', text='EMAIL')
+        
+        for (i, n, e) in list_names:
+                tree_view.insert("", "end", values=(i, n, e))
+        
+        
+        
+        
+        
+        tree_view.pack(expand=True, fill='both')
+        
+        # Create and pack the frame for the Treeview, with fixed size
+        self.tree_view_frame.pack()
+        self.tree_view_frame.pack_propagate(False)
