@@ -3,10 +3,12 @@ from flask import Flask, jsonify, request
 import pymysql
 import pymysql.cursors
 from dotenv import load_dotenv
+import requests
 
 # load your .env file
 load_dotenv()
 app = Flask(__name__)
+
 
 # making connection with my database
 connection = pymysql.connect(
@@ -15,35 +17,53 @@ connection = pymysql.connect(
     password=os.environ['MYSQL_PASSWORD'],
     database= os.environ['MYSQL_DATABASE'],
     charset='utf8mb4',
-    cursorclass=pymysql.cursors.SSDictCursor
+    cursorclass=pymysql.cursors.SSDictCursor,
+    server_public_key=True,
+    ssl=False
 )
 
 # create function to get infos from our database.
 @app.route('/api/products', methods=['GET'])
 def get_products():
-    model_product = request.args.get('model_product')
-    id = request.args.get('id')
-    
-    query = 'SELECT * FROM product'
-    
-    if model_product:
-        query += ' WHERE model_product = %s'
-    if id:
-        query += ' WHERE id = %s'
-        
-    with connection.cursor() as cursor:
-        if model_product:
-            cursor.execute(query, (model_product,))
-            
-        elif id:
-            cursor.execute(query, (id,))
-            
-        else:
+    #model_product = request.args.get('model_product')
+    #id = request.args.get('id')
+    try:
+        with connection.cursor() as cursor:
+            query = ''' 
+                    SELECT p.id, p.model_product, pt.type_name as product_type, s.size_name as size, gp.gender, 
+                    b.brand_name as brand, p.buying_price, p.selling_price, p.quantity 
+                    FROM product p
+                    JOIN product_types pt ON p.id = pt.id
+                    JOIN sizes s ON p.id = s.id
+                    JOIN gender_products gp ON p.id = gp.id
+                    JOIN brands b ON p.id = b.id
+                    '''
             cursor.execute(query)
+            products = cursor.fetchall()
             
-        products = cursor.fetchall()
-        
+    except requests.exceptions.RequestException as e:
+            print(f"An error occurred: {e}")
+    
     return jsonify(products)
+    
+    # if model_product:
+    #     query += ' WHERE model_product = %s'
+    # if id:
+    #     query += ' WHERE id = %s'
+        
+    # with connection.cursor() as cursor:
+    #     if model_product:
+    #         cursor.execute(query, (model_product,))
+            
+    #     elif id:
+    #         cursor.execute(query, (id,))
+            
+    #     else:
+    #         cursor.execute(query)
+            
+    #     products = cursor.fetchall()
+        
+    #return jsonify(products)
 
 
 # create function to add dict into database
