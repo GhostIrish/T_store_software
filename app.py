@@ -3,7 +3,7 @@ from flask import Flask, jsonify, request
 import pymysql
 import pymysql.cursors
 from dotenv import load_dotenv
-import requests
+
 
 # load your .env file
 load_dotenv()
@@ -25,46 +25,32 @@ connection = pymysql.connect(
 # create function to get infos from our database.
 @app.route('/api/products', methods=['GET'])
 def get_products():
-    #model_product = request.args.get('model_product')
-    #id = request.args.get('id')
+    query = request.args.get('query', '')
+
     try:
         with connection.cursor() as cursor:
-            query = ''' 
+            query_sql = ''' 
                     SELECT p.id, p.model_product, pt.type_name as product_type, s.size_name as size, gp.gender, 
                     b.brand_name as brand, p.buying_price, p.selling_price, p.quantity 
                     FROM product p
-                    JOIN product_types pt ON p.id = pt.id
-                    JOIN sizes s ON p.id = s.id
-                    JOIN gender_products gp ON p.id = gp.id
-                    JOIN brands b ON p.id = b.id
+                    JOIN product_types pt ON p.product_type = pt.id
+                    JOIN sizes s ON p.size = s.id
+                    JOIN gender_products gp ON p.gender_product = gp.id
+                    JOIN brands b ON p.brand = b.id
                     '''
-            cursor.execute(query)
+            if query:
+                query_sql += "WHERE p.model_product LIKE %s"
+                search_query = (query + '%',)
+                cursor.execute(query_sql, search_query)
+            else:
+                cursor.execute(query_sql)
             products = cursor.fetchall()
             
-    except requests.exceptions.RequestException as e:
+    except pymysql.MySQLError as e:
             print(f"An error occurred: {e}")
+            return jsonify({"error": "An error occurred while fetching products"}), 500
     
     return jsonify(products)
-    
-    # if model_product:
-    #     query += ' WHERE model_product = %s'
-    # if id:
-    #     query += ' WHERE id = %s'
-        
-    # with connection.cursor() as cursor:
-    #     if model_product:
-    #         cursor.execute(query, (model_product,))
-            
-    #     elif id:
-    #         cursor.execute(query, (id,))
-            
-    #     else:
-    #         cursor.execute(query)
-            
-    #     products = cursor.fetchall()
-        
-    #return jsonify(products)
-
 
 # create function to add dict into database
 # this function recept the dict from any method, with me, the front send me infos in one dict, i send him to database.

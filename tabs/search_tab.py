@@ -6,67 +6,50 @@ class SearchProductFrame(ctk.CTkFrame):
     def __init__(self, master, **kwargs):
         super().__init__(master, **kwargs)
 
+        self.setup_ui()
+
+    def setup_ui(self):
+        self.setup_labels()
+        self.setup_search_bar()
+        self.setup_treeview()
+        self.setup_treeview_styles()
+
+    def setup_labels(self):
         label_search = ctk.CTkLabel(self, text="Search Product", text_color="white", font=("Arial", 20))
         label_search.pack(pady=20, padx=20)
 
+    def setup_search_bar(self):
         search_frame = ctk.CTkFrame(self, fg_color="transparent")
         search_frame.pack(pady=10)
 
-        search_bar = ctk.CTkEntry(search_frame, width=600, placeholder_text='Product to search')
-        search_bar.pack(side="left", padx=5)
+        self.search_bar = ctk.CTkEntry(search_frame, width=600, placeholder_text='Product to search')
+        self.search_bar.pack(side="left", padx=5)
 
-        btn = ctk.CTkButton(search_frame, width=100, text='Print')
+        btn = ctk.CTkButton(search_frame, width=100, text='Search', command=self.search_products)
         btn.pack(side="left", padx=5)
 
-
-        # Fazer a requisição e inserir os produtos no Textbox
-        try:
-            response = requests.get('http://localhost:5000/api/products')
-            products = response.json()
-        except requests.exceptions.RequestException as e:
-            print(f"An error occurred: {e}")
-            
-
+    def setup_treeview(self):
         self.tree_view_frame = ctk.CTkFrame(self, width=850, height=400)
-        tree_view = ttk.Treeview(self.tree_view_frame, columns=('id', 'product', 'product_type', 'sizes', 'gender_product', 'brand', 'buying_price', 'selling_price', 'quantity'), show='headings')
-        tree_view.column('id', minwidth=50, width=50)
-        tree_view.column('product', minwidth=100, width=100)
-        tree_view.column('product_type', minwidth=100, width=100)
-        tree_view.column('sizes', minwidth=100, width=100)
-        tree_view.column('gender_product', minwidth=100, width=100)
-        tree_view.column('brand', minwidth=100, width=100)
-        tree_view.column('buying_price', minwidth=100, width=100)
-        tree_view.column('selling_price', minwidth=100, width=100)
-        tree_view.column('quantity', minwidth=100, width=100)
+        self.tree_view = ttk.Treeview(
+            self.tree_view_frame,
+            columns=('id', 'product', 'product_type', 'sizes', 'gender_product', 'brand', 'buying_price', 'selling_price', 'quantity'),
+            show='headings'
+        )
         
-        tree_view.heading('id', text='ID')
-        tree_view.heading('product', text='PRODUCT')
-        tree_view.heading('product_type', text='TYPE PRODUCT')
-        tree_view.heading('sizes', text='SIZE')
-        tree_view.heading('gender_product', text='GENDER')
-        tree_view.heading('brand', text='BRAND')
-        tree_view.heading('buying_price', text='PAY PRICE')
-        tree_view.heading('selling_price', text='SELL PRICE')
-        tree_view.heading('quantity', text='QUANTITY')
-        
-        for product in products:
-            product_values = (
-                product['id'], product['model_product'], product['product_type'], 
-                product['size'], product['gender'], product['brand'], 
-                product['buying_price'], product['selling_price'], product['quantity']
-            )
-            tree_view.insert("", "end", values=product_values)
+        for col in self.tree_view["columns"]:
+            self.tree_view.heading(col, text=col.replace("_", " ").upper())
+            self.tree_view.column(col, minwidth=100, width=100)
 
+        self.tree_view.column('id', minwidth=50, width=50)
         
-        # for item in products:
-        #     for key, product in item.items():
-        #         product_values = (product['id'], product['product'], product['product_type'], product['sizes'], product['gender_product'], product['brand'], product['buying_price'], product['selling_price'])
-        #         tree_view.insert("", "end", values=product_values)
+        self.tree_view.pack(expand=True, fill='both')
+        self.tree_view_frame.pack()
+        self.tree_view_frame.pack_propagate(False)
 
+    def setup_treeview_styles(self):
         style = ttk.Style()
-    
         style.theme_use("default")
-
+        
         style.configure("Treeview",
                         background="black",
                         foreground="white",
@@ -80,15 +63,41 @@ class SearchProductFrame(ctk.CTkFrame):
                         foreground="white",
                         relief="flat")
         style.map("Treeview.Heading",
-                    background=[('active', 'green')])
+                  background=[('active', 'green')])
 
+    def search_products(self):
+        texto = self.search_bar.get()
+        query = texto.capitalize()
         
-        tree_view.pack(expand=True, fill='both')
+        if query:
+            url = f'http://localhost:5000/api/products?query={query}'
+        else :
+            url = 'http://localhost:5000/api/products'
         
-        # Create and pack the frame for the Treeview, with fixed size
-        self.tree_view_frame.pack()
-        self.tree_view_frame.pack_propagate(False)
-        
-        def print_search_query(self):
-            search_query = self.search_bar.get()
-            print(f"Search query: {search_query}")
+        try:
+            response = requests.get(url)
+            response.raise_for_status()
+            products = response.json()
+            print(products)
+        except requests.exceptions.RequestException as e:
+            print(f"An error occurred: {e}")
+            self.display_error("An error occurred while fetching products. Please try again later.")
+            return
+
+        self.update_treeview(products)
+
+    def update_treeview(self, products):
+        for item in self.tree_view.get_children():
+            self.tree_view.delete(item)
+
+        for product in products:
+            product_values = (
+                product['id'], product['model_product'], product['product_type'],
+                product['size'], product['gender'], product['brand'],
+                product['buying_price'], product['selling_price'], product['quantity']
+            )
+            self.tree_view.insert("", "end", values=product_values)
+    
+    def display_error(self, message):
+        error_label = ctk.CTkLabel(self, text=message, text_color="red", font=("Arial", 14))
+        error_label.pack(pady=10)
