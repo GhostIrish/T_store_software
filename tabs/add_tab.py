@@ -10,6 +10,7 @@ class AddProductFrame(ctk.CTkFrame):
         self.setup_field()
         self.setup_option_widget()
         self.setup_entrys()
+        self.setup_textbox()
         self.setup_btn()
         
     def setup_label(self):
@@ -18,7 +19,7 @@ class AddProductFrame(ctk.CTkFrame):
     
     def setup_field(self):
         self.fields_frame = ctk.CTkFrame(self, fg_color="transparent")
-        self.fields_frame.pack(pady=20, padx=100, fill="both", expand=True)   
+        self.fields_frame.pack(pady=10, padx=100, fill="both", expand=True)   
     
     def setup_entrys(self):
         labels = ["Product ", "Buying price ", "Selling price ", "Quantity "]
@@ -46,7 +47,17 @@ class AddProductFrame(ctk.CTkFrame):
                                            variable=option_var)
             option_box.grid(row=i, column=4, padx=10, pady=5, sticky="ew")
 
+    def setup_textbox(self):
+        textbox = ctk.CTkTextbox(self.fields_frame, width=100, height=300, scrollbar_button_color="green", fg_color="black",
+                                 border_width=1, border_color="green", border_spacing=20, activate_scrollbars=True, 
+                                 scrollbar_button_hover_color='black')
+        textbox.grid(row=5, column=0, columnspan=5 , padx=10, pady=20, sticky="ew")
+
     def setup_btn(self):
-        send_button = ctk.CTkButton(self, text="Send")
-        send_button.pack(pady=20, padx=20)
+        send_button = ctk.CTkButton(self.fields_frame, text="Send")
+        send_button.grid(row=6, column=0, columnspan=5, pady=5, padx=20, sticky="ew")
+        
+        cancel_button = ctk.CTkButton(self.fields_frame, text="Cancel", fg_color="#FF6961", hover_color="red")
+        cancel_button.grid(row=7, column=0, columnspan=5, pady=10, padx=20, sticky="ew")
+
 
