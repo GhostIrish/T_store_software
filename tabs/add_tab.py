@@ -26,6 +26,7 @@ class AddProductFrame(ctk.CTkFrame):
     def setup_entrys(self):
         labels = ["Product ", "Buying price ", "Selling price ", "Quantity "]
         self.entries = []
+        self.entry_labels = labels
 
         for i, label in enumerate(labels):
             lbl = ctk.CTkLabel(self.fields_frame, text=label, text_color="white")
@@ -42,6 +43,7 @@ class AddProductFrame(ctk.CTkFrame):
         self.option_widgets = []
         titles = ["Type ", "Size ", "Gender ", "Brand "]
         self.option_endpoints = ["/api/types", "/api/sizes", "/api/genders", "/api/brands"]
+        self.opt_labels = titles
         
         for i, title in enumerate(titles):
             lbl = ctk.CTkLabel(self.fields_frame, text=title, text_color="white")
@@ -79,13 +81,33 @@ class AddProductFrame(ctk.CTkFrame):
             threading.Thread(target=fetch_data, args=(endpoint, option_box)).start()
 
     def setup_textbox(self):
-        textbox = ctk.CTkTextbox(self.fields_frame, width=100, height=300, scrollbar_button_color="green", fg_color="black",
+        self.textbox = ctk.CTkTextbox(self.fields_frame, width=100, height=250, scrollbar_button_color="green", fg_color="black",
                                  border_width=1, border_color="green", border_spacing=20, activate_scrollbars=True, 
-                                 scrollbar_button_hover_color='black')
-        textbox.grid(row=5, column=0, columnspan=5 , padx=10, pady=20, sticky="ew")
+                                 scrollbar_button_hover_color='black', state="disabled")
+        self.textbox.grid(row=5, column=0, columnspan=5 , padx=10, pady=20, sticky="ew")
+    
+    def insert_into_box(self, text):
+        self.textbox.configure(state="normal")  # Permitir a inserção de texto
+        self.textbox.insert("end", text + "\n")
+        self.textbox.configure(state="disabled")  # Desativar novamente após a inserção
+        
+    def collect_data(self):
+        data = """
+You really want to insert this product in database?
+Press "Send" again if yes or "Cancel" to try again. \n \n"""
+        # Get data from entries
+        for label, entry in zip(self.entry_labels, self.entries):
+            data += f'{label}: {entry.get()}\n'
+        
+        # Get data from opt menus
+        for label, (option_var, _) in zip(self.opt_labels, self.option_widgets):
+            data += f'{label}: {option_var.get()}\n'
+            
+        #insert data into textbox
+        self.insert_into_box(data)
 
     def setup_btn(self):
-        send_button = ctk.CTkButton(self.fields_frame, text="Send")
+        send_button = ctk.CTkButton(self.fields_frame, text="Send", command=lambda: self.collect_data())
         send_button.grid(row=6, column=0, columnspan=5, pady=5, padx=20, sticky="ew")
         
         cancel_button = ctk.CTkButton(self.fields_frame, text="Cancel", fg_color="#FF6961", hover_color="red")
