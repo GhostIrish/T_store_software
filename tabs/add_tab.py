@@ -91,7 +91,13 @@ class AddProductFrame(ctk.CTkFrame):
         self.textbox.insert("end", text + "\n")
         self.textbox.configure(state="disabled")  # Desativar novamente após a inserção
         
+    def clear_textbox(self):
+        self.textbox.configure(state="normal")  # Permitir a limpeza de texto
+        self.textbox.delete("1.0", "end")
+        self.textbox.configure(state="disabled")  # Desativar novamente após a limpeza
+    
     def collect_data(self):
+        self.clear_textbox()  # Limpar a textbox antes de inserir novos dados
         data = """
 You really want to insert this product in database?
 Press "Send" again if yes or "Cancel" to try again. \n \n"""
@@ -106,10 +112,17 @@ Press "Send" again if yes or "Cancel" to try again. \n \n"""
         #insert data into textbox
         self.insert_into_box(data)
 
+    def show_send_btn(self):
+        self.collect_data()
+        send_button = ctk.CTkButton(self.fields_frame, text="Send to database", fg_color="#2A6CB7", hover_color="blue")
+        send_button.grid(row=8, column=0, columnspan=5, pady=5, padx=20, sticky="ew")
+
     def setup_btn(self):
-        send_button = ctk.CTkButton(self.fields_frame, text="Send", command=lambda: self.collect_data())
-        send_button.grid(row=6, column=0, columnspan=5, pady=5, padx=20, sticky="ew")
+        preview_button = ctk.CTkButton(self.fields_frame, text="Preview", command=self.show_send_btn)
+        preview_button.grid(row=6, column=0, columnspan=5, pady=5, padx=20, sticky="ew")
         
-        cancel_button = ctk.CTkButton(self.fields_frame, text="Cancel", fg_color="#FF6961", hover_color="red")
+        cancel_button = ctk.CTkButton(self.fields_frame, text="Cancel", command=lambda: self.clear_textbox(), fg_color="#FF6961", hover_color="red")
         cancel_button.grid(row=7, column=0, columnspan=5, pady=10, padx=20, sticky="ew")
+        
+
         
