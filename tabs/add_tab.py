@@ -100,7 +100,7 @@ class AddProductFrame(ctk.CTkFrame):
         self.clear_textbox()  # Limpar a textbox antes de inserir novos dados
         data = """
 You really want to insert this product in database?
-Press "Send" again if yes or "Cancel" to try again. \n \n"""
+Press the new button if yes or "Cancel" to try again. \n \n"""
         # Get data from entries
         for label, entry in zip(self.entry_labels, self.entries):
             data += f'{label}: {entry.get()}\n'
@@ -112,9 +112,54 @@ Press "Send" again if yes or "Cancel" to try again. \n \n"""
         #insert data into textbox
         self.insert_into_box(data)
 
+    def send_db_data(self):
+        base_url = 'http://localhost:5000'
+        print("send_db_data called")
+        # Function to get ID from name
+        def get_id_from_name(endpoint, name):
+            print(f"Fetching ID for {name} from {endpoint}")
+            try:
+                response = requests.get(base_url + endpoint)
+                response.raise_for_status()
+                data = response.json()
+                for item in data:
+                    if 'type_name' in item and item['type_name'] == name:
+                        return item['id']
+                    elif 'size_name' in item and item['size_name'] == name:
+                        return item['id']
+                    elif 'gender' in item and item['gender'] == name:
+                        return item['id']
+                    elif 'brand_name' in item and item['brand_name'] == name:
+                        return item['id']
+                return None
+            except requests.RequestException as e:
+                print(f"Error fetching data from {endpoint}: {e}")
+
+        # Collect data and map names to IDs
+        product_data = {
+            'model_product': self.entries[0].get(),
+            'buying_price': self.entries[1].get(),
+            'selling_price': self.entries[2].get(),
+            'quantity': self.entries[3].get(),
+            'product_type': get_id_from_name('/api/types', self.option_widgets[0][0].get()),
+            'size': get_id_from_name('/api/sizes', self.option_widgets[1][0].get()),
+            'gender_product': get_id_from_name('/api/genders', self.option_widgets[2][0].get()),
+            'brand': get_id_from_name('/api/brands', self.option_widgets[3][0].get())
+        }
+        print(product_data)
+        # Send data to the database
+        try:
+            response = requests.post(base_url + '/api/add_product', json=product_data)
+            response.raise_for_status()
+            print(f"Data sent to database: {response.json()}")
+        except requests.RequestException as e:
+            print(f"Error sending data to the database: {e}")
+
+                
+
     def show_send_btn(self):
         self.collect_data()
-        send_button = ctk.CTkButton(self.fields_frame, text="Send to database", fg_color="#2A6CB7", hover_color="blue")
+        send_button = ctk.CTkButton(self.fields_frame, text="Send to database", command=self.send_db_data, fg_color="#2A6CB7", hover_color="blue")
         send_button.grid(row=8, column=0, columnspan=5, pady=5, padx=20, sticky="ew")
 
     def setup_btn(self):
