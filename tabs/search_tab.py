@@ -1,3 +1,4 @@
+from tabs.update_tab import UpdateProductFrame
 import customtkinter as ctk
 from tkinter import ttk
 import requests
@@ -5,7 +6,7 @@ import requests
 class SearchProductFrame(ctk.CTkFrame):
     def __init__(self, master, **kwargs):
         super().__init__(master, **kwargs)
-
+        self.master = master
         self.setup_ui()
 
     def setup_ui(self):
@@ -45,6 +46,7 @@ class SearchProductFrame(ctk.CTkFrame):
         self.tree_view.pack(expand=True, fill='both')
         self.tree_view_frame.pack()
         self.tree_view_frame.pack_propagate(False)
+        self.tree_view.bind("<Double-1>", self.on_double_click)
 
     def setup_treeview_styles(self):
         style = ttk.Style()
@@ -97,7 +99,28 @@ class SearchProductFrame(ctk.CTkFrame):
                 product['buying_price'], product['selling_price'], product['quantity']
             )
             self.tree_view.insert("", "end", values=product_values)
-    
+
+        
+    def on_double_click(self, event):
+        if hasattr(self.master, 'update_frame') and self.master.update_frame is not None:
+            self.master.update_frame.destroy()
+            
+        # Captura o identificador do item selecionado na tabela
+        item_id = self.tree_view.focus()
+        
+        # Obtém os dados do item selecionado
+        item = self.tree_view.item(item_id)
+        
+        # Transforma os dados do item em um dicionário com os nomes dos campos do produto
+        product_data = dict(zip(
+            ["id", "product", "product_type", "sizes", "gender_product", "brand", "buying_price", "selling_price", "quantity"],
+            item["values"]
+        ))
+            
+        # Cria e exibe o frame de atualização com os dados do produto
+        self.master.update_frame = UpdateProductFrame(self.master)
+        self.master.update_frame.pack(fill="both", expand=True)
+
     def display_error(self, message):
         error_label = ctk.CTkLabel(self, text=message, text_color="red", font=("Arial", 14))
         error_label.pack(pady=10)

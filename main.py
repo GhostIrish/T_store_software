@@ -1,6 +1,5 @@
 import customtkinter as ctk
 from tabs.add_tab import AddProductFrame
-from tabs.update_tab import UpdateProductFrame
 from tabs.search_tab import SearchProductFrame
 from tabs.report_tab import ReportProductFrame
 from tabs.config_tab import ConfigProductFrame
@@ -21,7 +20,6 @@ class MainApplication(ctk.CTk):
         self.create_content_area()
         self.create_frames()
 
-
         show_frame(self.add_frame)
 
     def create_navbar(self):
@@ -30,9 +28,6 @@ class MainApplication(ctk.CTk):
 
         add_button = ctk.CTkButton(frame_nav, text="Add", command=lambda: show_frame(self.add_frame))
         add_button.grid(row=0, column=0, pady=10, padx=20, sticky="ew")
-
-        update_button = ctk.CTkButton(frame_nav, text="Update", command=lambda: show_frame(self.update_frame))
-        update_button.grid(row=1, column=0, pady=10, padx=20, sticky="ew")
 
         search_button = ctk.CTkButton(frame_nav, text="Search", command=lambda: show_frame(self.search_frame))
         search_button.grid(row=2, column=0, pady=10, padx=20, sticky="ew")
@@ -55,12 +50,11 @@ class MainApplication(ctk.CTk):
 
     def create_frames(self):
         self.add_frame = AddProductFrame(self.center_frame)
-        self.update_frame = UpdateProductFrame(self.center_frame)
         self.search_frame = SearchProductFrame(self.center_frame)
         self.report_frame = ReportProductFrame(self.center_frame)
         self.config_frame = ConfigProductFrame(self.center_frame)
-
-        for frame in (self.add_frame, self.update_frame, self.search_frame, self.report_frame, self.config_frame):
+        self.update_frame = None
+        for frame in (self.add_frame, self.search_frame, self.report_frame, self.config_frame):
             frame.place(relx=0, rely=0, relwidth=1, relheight=1)
 
 
