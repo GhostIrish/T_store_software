@@ -118,7 +118,7 @@ class SearchProductFrame(ctk.CTkFrame):
         ))
             
         # Cria e exibe o frame de atualização com os dados do produto
-        self.master.update_frame = UpdateProductFrame(self.master)
+        self.master.update_frame = UpdateProductFrame(self.master, product_data)
         self.master.update_frame.pack(fill="both", expand=True)
 
     def display_error(self, message):

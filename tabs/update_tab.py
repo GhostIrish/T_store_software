@@ -2,8 +2,9 @@ import customtkinter as ctk
 import requests, threading
 
 class UpdateProductFrame(ctk.CTkFrame):
-    def __init__(self, master, **kwargs):
+    def __init__(self, master, product_data, **kwargs):
         super().__init__(master, **kwargs)
+        self.product_data = product_data
         self.setup_ui()
 
     def setup_ui(self):
@@ -11,6 +12,7 @@ class UpdateProductFrame(ctk.CTkFrame):
         self.setup_field()
         self.setup_option_widget()
         self.setup_entries()
+        self.fill_entries_with_product_data()
         self.setup_textbox()
         self.setup_buttons()
         self.fetch_option_data()
@@ -42,6 +44,15 @@ class UpdateProductFrame(ctk.CTkFrame):
 
         # Adiciona uma coluna vazia para espaçamento
         self.fields_frame.grid_columnconfigure(2, minsize=50)  # Ajuste o minsize conforme necessário
+
+    def fill_entries_with_product_data(self):
+        # Preenche os campos de entrada com os dados do produto
+        self.entries[0].insert(0, self.product_data.get("product", ""))
+        self.entries[1].insert(0, self.product_data.get("buying_price", ""))
+        self.entries[2].insert(0, self.product_data.get("selling_price", ""))
+        self.entries[3].insert(0, self.product_data.get("quantity", ""))
+        
+        #self.collect_data()
 
     def setup_option_widget(self):
         # Cria menus suspensos para selecionar opções
@@ -218,6 +229,9 @@ Press the new button if yes or "Cancel" to try again. \n \n"""
             entry.delete(0, "end")
         self.clear_textbox()
 
+    def close_frame(self):
+        self.destroy()
+
     def show_send_btn(self):
         # Coleta os dados e exibe o botão de envio
         self.collect_data()
@@ -229,5 +243,5 @@ Press the new button if yes or "Cancel" to try again. \n \n"""
         preview_button = ctk.CTkButton(self.fields_frame, text="Preview", command=self.show_send_btn)
         preview_button.grid(row=6, column=0, columnspan=5, pady=5, padx=20, sticky="ew")
 
-        cancel_button = ctk.CTkButton(self.fields_frame, text="Cancel", command=self.clear_textbox, fg_color="#FF6961", hover_color="red")
+        cancel_button = ctk.CTkButton(self.fields_frame, text="Cancel", command=self.close_frame, fg_color="#FF6961", hover_color="red")
         cancel_button.grid(row=7, column=0, columnspan=5, pady=10, padx=20, sticky="ew")
