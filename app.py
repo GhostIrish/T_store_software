@@ -170,20 +170,16 @@ def get_brands():
         connection.close()
 
 # delete product from database using the id.
-@app.route('/api/delete_product', methods=['DELETE'])
-def delete_product():
+@app.route('/api/delete_product/<int:product_id>', methods=['DELETE'])
+def delete_product(product_id):
     connection = get_connection()
-    product_id = request.args.get('id')
     try:
-        if product_id:
-            with connection.cursor() as cursor:
-                sql = 'DELETE FROM product WHERE id = %s'
-                cursor.execute(sql, (product_id,))
-            connection.commit()
-            return jsonify(message=f'Product with id {product_id} deleted sucessfully')
-        else:
-            return jsonify(message='Product id is required to delete'), 400
-        
+        with connection.cursor() as cursor:
+            sql = 'DELETE FROM product WHERE id = %s'
+            cursor.execute(sql, (product_id,))
+        connection.commit()
+        return jsonify(message=f'Product with id {product_id} deleted sucessfully'), 200
+    
     except pymysql.MySQLError as error:
         return jsonify(error=str(error)), 500
     

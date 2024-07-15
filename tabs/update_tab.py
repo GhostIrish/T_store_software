@@ -240,10 +240,27 @@ Press the new button if yes or "Cancel" to try again. \n \n"""
     def close_frame(self):
         self.destroy()
 
+    def delete_product(self):
+        self.show_loading_screen()
+        # Envia os dados em um thread separado para não bloquear a UI
+        threading.Thread(target=self._delete_product).start()
+
+    def _delete_product(self):
+        try:
+            url = f"http://localhost:5000/api/delete_product/{self.product_data['id']}"
+            response = requests.delete(url)
+            response.raise_for_status()
+            print(f"Product deleted successfully: {response.json()}")
+            self.update_loading_screen("Product deleted successfully!", True)
+        except requests.RequestException as e:
+            print(f"Error deleting product: {e}")
+            self.update_loading_screen("Error deleting product.", False)
+     
+            
     def show_send_btn(self):
         # Coleta os dados e exibe o botão de envio
         self.collect_data()
-        send_button = ctk.CTkButton(self.fields_frame, text="Send to database", command=self.send_db_data, fg_color="#2A6CB7", hover_color="blue")
+        send_button = ctk.CTkButton(self.fields_frame, text="Update in database", command=self.send_db_data, fg_color="#2A6CB7", hover_color="blue")
         send_button.grid(row=8, column=0, columnspan=5, pady=5, padx=20, sticky="ew")
 
     def setup_buttons(self):
@@ -251,5 +268,5 @@ Press the new button if yes or "Cancel" to try again. \n \n"""
         preview_button = ctk.CTkButton(self.fields_frame, text="Preview", command=self.show_send_btn)
         preview_button.grid(row=6, column=0, columnspan=5, pady=5, padx=20, sticky="ew")
 
-        cancel_button = ctk.CTkButton(self.fields_frame, text="Cancel", command=self.close_frame, fg_color="#FF6961", hover_color="red")
-        cancel_button.grid(row=7, column=0, columnspan=5, pady=10, padx=20, sticky="ew")
+        delete_button = ctk.CTkButton(self.fields_frame, text="Delete", command=self.delete_product, fg_color="#FF6961", hover_color="red")
+        delete_button.grid(row=7, column=0, columnspan=5, pady=10, padx=20, sticky="ew")
