@@ -99,24 +99,27 @@ class SearchProductFrame(ctk.CTkFrame):
                 product['buying_price'], product['selling_price'], product['quantity']
             )
             self.tree_view.insert("", "end", values=product_values)
-
         
     def on_double_click(self, event):
         if hasattr(self.master, 'update_frame') and self.master.update_frame is not None:
             self.master.update_frame.destroy()
-            
+         
         # Captura o identificador do item selecionado na tabela
         item_id = self.tree_view.focus()
         
         # Obtém os dados do item selecionado
         item = self.tree_view.item(item_id)
         
+        # tudo começa aqui, trabalhar encima disso para fazer o update
         # Transforma os dados do item em um dicionário com os nomes dos campos do produto
         product_data = dict(zip(
             ["id", "product", "product_type", "sizes", "gender_product", "brand", "buying_price", "selling_price", "quantity"],
             item["values"]
         ))
-            
+        
+        print(f'Product data search tab: {product_data}')  
+          
+          
         # Cria e exibe o frame de atualização com os dados do produto
         self.master.update_frame = UpdateProductFrame(self.master, product_data)
         self.master.update_frame.pack(fill="both", expand=True)

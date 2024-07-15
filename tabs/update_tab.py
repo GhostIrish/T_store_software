@@ -51,7 +51,10 @@ class UpdateProductFrame(ctk.CTkFrame):
         self.entries[1].insert(0, self.product_data.get("buying_price", ""))
         self.entries[2].insert(0, self.product_data.get("selling_price", ""))
         self.entries[3].insert(0, self.product_data.get("quantity", ""))
-        
+        self.option_widgets[0][0].set(self.product_data.get("product_type", ""))
+        self.option_widgets[1][0].set(self.product_data.get("sizes", ""))
+        self.option_widgets[2][0].set(self.product_data.get("gender_product", ""))
+        self.option_widgets[3][0].set(self.product_data.get("brand", ""))
         #self.collect_data()
 
     def setup_option_widget(self):
@@ -138,8 +141,6 @@ Press the new button if yes or "Cancel" to try again. \n \n"""
         self.insert_into_box(data)
 
     def _send_db_data(self):
-        self.show_loading_screen()
-
         base_url = 'http://localhost:5000'
         print("send_db_data called")
 
@@ -162,6 +163,7 @@ Press the new button if yes or "Cancel" to try again. \n \n"""
                 return None
             except requests.RequestException as e:
                 print(f"Error fetching data from {endpoint}: {e}")
+                return None
 
         # Coleta dados e mapeia nomes para IDs
         product_data = {
@@ -174,11 +176,17 @@ Press the new button if yes or "Cancel" to try again. \n \n"""
             'gender_product': get_id_from_name('/api/genders', self.option_widgets[2][0].get()),
             'brand': get_id_from_name('/api/brands', self.option_widgets[3][0].get())
         }
+        print()
         print(product_data)
-
+        print()
         # Envia os dados para o banco de dados
         try:
-            response = requests.post(base_url + '/api/add_product', json=product_data)
+            print('trying to connect')
+            print()
+            url = f"{base_url}/api/update_product/{self.product_data['id']}"
+            print('sucessfully')
+            print('')
+            response = requests.put(url, json=product_data)
             response.raise_for_status()
             print(f"Data sent to database: {response.json()}")
             self.update_loading_screen("Data sent successfully!", True)
@@ -218,9 +226,9 @@ Press the new button if yes or "Cancel" to try again. \n \n"""
         self.loading_screen.update()
 
     def send_db_data(self):
+        self.show_loading_screen()
         # Envia os dados em um thread separado para não bloquear a UI
         threading.Thread(target=self._send_db_data).start()
-        self.loading_screen.update_idletasks()  # Atualiza a tela antes de enviar dados
 
     def close_loading_screen(self):
         # Fecha a janela de carregamento e limpa as entradas

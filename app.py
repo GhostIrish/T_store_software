@@ -81,6 +81,37 @@ def add_product():
     finally:
         connection.close()
 
+@app.route('/api/update_product/<int:product_id>', methods=['PUT'])
+def update_product(product_id):
+    connection = get_connection()
+    try:
+        updated_product = request.json
+        print(f'received data: {updated_product}')
+        with connection.cursor() as cursor:
+            sql = '''
+            UPDATE product SET model_product = %s, product_type = %s, size = %s, gender_product = %s, brand = %s, buying_price = %s, selling_price = %s, quantity = %s
+            WHERE id = %s
+             '''
+            cursor.execute(sql, (
+                updated_product['model_product'],
+                updated_product['product_type'],
+                updated_product['size'],
+                updated_product['gender_product'],
+                updated_product['brand'],
+                updated_product['buying_price'],
+                updated_product['selling_price'],
+                updated_product['quantity'],
+                product_id
+            ))
+        connection.commit()
+            
+        return jsonify(message='Product updated successfully', item=updated_product), 200
+
+    except pymysql.MySQLError as error:
+        return jsonify(error=str(error)), 500
+    finally:
+        connection.close()
+
 # call specify datas for option menu in add_tab
 @app.route('/api/types', methods=['GET'])
 def get_product_types():
@@ -95,7 +126,6 @@ def get_product_types():
         return jsonify({'error': 'An error occurred while ftching product types'}), 500
     finally:
         connection.close()
-    
 
 @app.route('/api/sizes', methods=['GET'])
 def get_sizes():
