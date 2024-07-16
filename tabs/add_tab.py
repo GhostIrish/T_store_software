@@ -126,11 +126,25 @@ Press the new button if yes or "Cancel" to try again. \n \n"""
         # Insere os dados na caixa de texto
         self.insert_into_box(data)
 
+    def send_db_data(self):
+        # Envia os dados em um thread separado para não bloquear a UI
+        threading.Thread(target=self._send_db_data).start()
+
     def _send_db_data(self):
         self.show_loading_screen()
 
         base_url = 'http://localhost:5000'
         print("send_db_data called")
+
+        total_steps = 10
+        current_step = 0
+
+        def update_progress(step_increment=1):
+            nonlocal current_step
+            current_step += step_increment
+            self.loading_screen.after(0, lambda: self.progress_var.set((current_step / total_steps)))
+
+        update_progress(1)
 
         # Função para obter ID a partir do nome
         def get_id_from_name(endpoint, name):
@@ -139,6 +153,7 @@ Press the new button if yes or "Cancel" to try again. \n \n"""
                 response = requests.get(base_url + endpoint)
                 response.raise_for_status()
                 data = response.json()
+                update_progress(2)
                 for item in data:
                     if 'type_name' in item and item['type_name'] == name:
                         return item['id']
@@ -151,6 +166,7 @@ Press the new button if yes or "Cancel" to try again. \n \n"""
                 return None
             except requests.RequestException as e:
                 print(f"Error fetching data from {endpoint}: {e}")
+                return None
 
         # Coleta dados e mapeia nomes para IDs
         product_data = {
@@ -163,7 +179,7 @@ Press the new button if yes or "Cancel" to try again. \n \n"""
             'gender_product': get_id_from_name('/api/genders', self.option_widgets[2][0].get()),
             'brand': get_id_from_name('/api/brands', self.option_widgets[3][0].get())
         }
-        print(product_data)
+        update_progress(2)
 
         # Envia os dados para o banco de dados
         try:
@@ -174,11 +190,14 @@ Press the new button if yes or "Cancel" to try again. \n \n"""
         except requests.RequestException as e:
             print(f"Error sending data to the database: {e}")
             self.update_loading_screen("Error sending data.", False)
+        
+        update_progress(total_steps - current_step)
 
     def update_loading_screen(self, message, success):
         # Usa o método `after` para garantir que as atualizações sejam feitas na thread principal
         self.loading_screen.after(0, lambda: self.loading_screen_message.set(message))
         if success:
+            self.loading_screen.after(0, lambda: self.progress_var.set(1.0))
             self.loading_screen.after(0, lambda: self.loading_screen_button.configure(state="normal"))
 
     def show_loading_screen(self):
@@ -199,17 +218,17 @@ Press the new button if yes or "Cancel" to try again. \n \n"""
         self.loading_screen_message = ctk.StringVar(value="Sending data to the database...")
         message_label = ctk.CTkLabel(self.loading_screen, textvariable=self.loading_screen_message)
         message_label.pack(pady=20)
+        
+        self.progress_var = ctk.DoubleVar(value=0)
+        self.progress_bar = ctk.CTkProgressBar(self.loading_screen, variable=self.progress_var)
+        self.progress_bar.pack(pady=10)
+        self.progress_bar.set(0)
 
         self.loading_screen_button = ctk.CTkButton(self.loading_screen, text="OK", command=self.close_loading_screen, state="disabled")
         self.loading_screen_button.pack(pady=20)
 
         # Atualiza a janela de carregamento para garantir que ela seja exibida antes de enviar os dados
         self.loading_screen.update()
-
-    def send_db_data(self):
-        # Envia os dados em um thread separado para não bloquear a UI
-        threading.Thread(target=self._send_db_data).start()
-        self.loading_screen.update_idletasks()  # Atualiza a tela antes de enviar dados
 
     def close_loading_screen(self):
         # Fecha a janela de carregamento e limpa as entradas
