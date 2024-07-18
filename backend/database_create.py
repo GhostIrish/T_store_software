@@ -70,46 +70,46 @@ with connection:
         )
         
         #insert into support tables - :)
-        # cursor.executemany(
-        #     'INSERT INTO product_types (type_name) VALUES (%s)',
-        #     [('T-shirt',), ('Pants',), ('Jacket',)]
-        # )
+        cursor.executemany(
+            'INSERT INTO product_types (type_name) VALUES (%s)',
+            [('T-shirt',), ('Pants',), ('Jacket',)]
+        )
         
         
-        # cursor.executemany(
-        #     'INSERT INTO sizes (size_name) VALUES (%s)',
-        #     [('PP'), ('P'), ('M'), ('G'), ('GG'), ('XXG')]
-        # )
+        cursor.executemany(
+            'INSERT INTO sizes (size_name) VALUES (%s)',
+            [('PP'), ('P'), ('M'), ('G'), ('GG'), ('XXG')]
+        )
         
-        # cursor.executemany(
-        #     'INSERT INTO gender_products (gender) VALUES (%s)',
-        #     [('Female'), ('Male',), ('Child',)]
-        # )
+        cursor.executemany(
+            'INSERT INTO gender_products (gender) VALUES (%s)',
+            [('Female'), ('Male',), ('Child',)]
+        )
         
-        # cursor.executemany(
-        #     'INSERT INTO brands (brand_name) VALUES (%s)',
-        #     [('Nike'), ('Adidas'), ('Calvin Klein'), ('Gucci'), ]
-        # )
+        cursor.executemany(
+            'INSERT INTO brands (brand_name) VALUES (%s)',
+            [('Nike'), ('Adidas'), ('Calvin Klein'), ('Gucci'), ]
+        )
         
         
         # -------------------------------------------------------------------------------------------------------------------------
        
         # add_foreign key -
-        # cursor.execute(
-        #     f'ALTER TABLE {TABLE_NAME} ADD CONSTRAINT ct_type_id FOREIGN KEY (product_type) REFERENCES product_types(id) '
-        # )
+        cursor.execute(
+            f'ALTER TABLE {TABLE_NAME} ADD CONSTRAINT ct_type_id FOREIGN KEY (product_type) REFERENCES product_types(id) '
+        )
         
-        # cursor.execute(
-        #     f'ALTER TABLE {TABLE_NAME} ADD CONSTRAINT size_ct_id FOREIGN KEY (size) REFERENCES sizes(id) '
-        # )
+        cursor.execute(
+            f'ALTER TABLE {TABLE_NAME} ADD CONSTRAINT size_ct_id FOREIGN KEY (size) REFERENCES sizes(id) '
+        )
         
-        # cursor.execute(
-        #     f'ALTER TABLE {TABLE_NAME} ADD CONSTRAINT gender_ct_id FOREIGN KEY (gender_product) REFERENCES gender_products(id) '
-        # )
+        cursor.execute(
+            f'ALTER TABLE {TABLE_NAME} ADD CONSTRAINT gender_ct_id FOREIGN KEY (gender_product) REFERENCES gender_products(id) '
+        )
         
-        # cursor.execute(
-        #     f'ALTER TABLE {TABLE_NAME} ADD CONSTRAINT brand_ct_id FOREIGN KEY (brand) REFERENCES brands(id) '
-        # )
+        cursor.execute(
+            f'ALTER TABLE {TABLE_NAME} ADD CONSTRAINT brand_ct_id FOREIGN KEY (brand) REFERENCES brands(id) '
+        )
 
 
         # -------------------------------------------------------------------------------------------------------------------------

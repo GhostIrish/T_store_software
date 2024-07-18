@@ -8,7 +8,6 @@ pycharm_work/
 .DS_Store
 chromedriver
 mysql_206
-.env
 teste.py
 icon_1.ico
 tkinterfront.spec
