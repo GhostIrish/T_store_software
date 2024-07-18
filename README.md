@@ -65,8 +65,6 @@ Após a execução do script, verifique o seguinte:
 
 Se você encontrar problemas ou tiver dúvidas, sinta-se à vontade para abrir uma issue no repositório do GitHub ou entrar em contato com o suporte.
 
----
 
-Com esse guia, os usuários poderão configurar e executar a aplicação com facilidade. Certifique-se de incluir esse arquivo README.md no diretório raiz do seu projeto.
 
 
