@@ -67,3 +67,7 @@ Se você encontrar problemas ou tiver dúvidas, sinta-se à vontade para abrir u
 
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> f1247f46e59d1e7f47f672ce5974255f0268d014
