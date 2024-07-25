@@ -12,14 +12,15 @@ COPY requirements.txt .
 # Instala as dependências do Python
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copia o restante do código do aplicativo para o contêiner
-COPY . .
+# Copia apenas o arquivo principal da API e outras dependências necessárias
+COPY app.py .
+COPY backend/ ./backend/
 
 # Define a variável de ambiente para o Flask
-ENV FLASK_APP=main.py
+ENV FLASK_APP=app.py
 
 # Exponha a porta que a aplicação irá rodar
 EXPOSE 5000
 
 # Comando para rodar a aplicação
-CMD ["python", "main.py"]
+CMD ["python", "app.py"]
