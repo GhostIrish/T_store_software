@@ -1,26 +1,30 @@
 #!/bin/bash
 
-echo "=============================="
-echo " Iniciando Setup do Projeto"
-echo "=============================="
+@echo off
+REM Instalar Docker (se não estiver instalado)
+if not exist "%ProgramFiles%\Docker\Docker" (
+    echo Docker is not installed. Installing Docker...
+    powershell -Command "Start-Process 'https://desktop.docker.com/win/stable/Docker%20Desktop%20Installer.exe' -Wait -NoNewWindow"
+)
 
-# Diretório onde o projeto será clonado
-PROJECT_DIR="/home/$(whoami)/project_t_store"
+REM Iniciar Docker
+echo Starting Docker...
+start "" "C:\Program Files\Docker\Docker\Docker Desktop.exe"
+timeout /t 30
 
-# URL do repositório Git
-REPO_URL="https://github.com/GhostIrish/T_store_software.git"
+REM Navegar para a pasta do projeto
+cd %~dp0
 
-# Clonando o repositório
-echo "Clonando o repositório do GitHub..."
-git clone "$REPO_URL" "$PROJECT_DIR"
-
-# Navegando para o diretório do projeto
-cd "$PROJECT_DIR" || exit
-
-# Iniciando Docker Compose
-echo "Iniciando serviços do Docker..."
+REM Configurar banco de dados e API usando docker-compose
+echo Setting up MySQL container and API...
 docker-compose up -d
 
-echo "=============================="
-echo "Setup concluído com sucesso!"
-echo "=============================="
+REM Esperar alguns segundos para garantir que o container está completamente iniciado
+timeout /t 15
+
+REM Iniciar a aplicação GUI
+echo Starting the GUI application...
+start "" "%~dp0dist\main.exe"
+
+echo Setup complete.
+pause
