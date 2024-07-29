@@ -72,9 +72,9 @@ class SearchProductFrame(ctk.CTkFrame):
         query = texto.capitalize()
         
         if query:
-            url = f'http://localhost:5000/api/products?query={query}'
+            url = f'http://127.0.0.1:5000/api/products?query={query}'
         else :
-            url = 'http://localhost:5000/api/products'
+            url = 'http://127.0.0.1:5000/api/products'
         
         try:
             response = requests.get(url)

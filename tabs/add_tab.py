@@ -61,7 +61,7 @@ class AddProductFrame(ctk.CTkFrame):
             self.option_widgets.append((option_var, option_box))
 
     def fetch_option_data(self):
-        base_url = 'http://localhost:5000'
+        base_url = 'http://127.0.0.1:5000'
 
         def fetch_data(endpoint, option_box):
             try:
@@ -133,7 +133,7 @@ Press the new button if yes or "Cancel" to try again. \n \n"""
     def _send_db_data(self):
         self.show_loading_screen()
 
-        base_url = 'http://localhost:5000'
+        base_url = 'http://127.0.0.1:5000'
         print("send_db_data called")
 
         total_steps = 10

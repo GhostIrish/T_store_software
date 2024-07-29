@@ -81,7 +81,7 @@ class UpdateProductFrame(ctk.CTkFrame):
             self.option_widgets.append((option_var, option_box))
 
     def fetch_option_data(self):
-        base_url = 'http://localhost:5000'
+        base_url = 'http://127.0.0.1:5000'
 
         def fetch_data(endpoint, option_box):
             try:
@@ -152,7 +152,7 @@ Press the new button if yes or "Cancel" to try again. \n \n"""
         threading.Thread(target=self._send_db_data).start()
 
     def _send_db_data(self):
-        base_url = 'http://localhost:5000'
+        base_url = 'http://127.0.0.1:5000'
         print("send_db_data called")
 
         total_steps = 10
@@ -273,7 +273,7 @@ Press the new button if yes or "Cancel" to try again. \n \n"""
 
     def _delete_product(self):
         try:
-            url = f"http://localhost:5000/api/delete_product/{self.product_data['id']}"
+            url = f"http://127.0.0.1:5000/api/delete_product/{self.product_data['id']}"
             response = requests.delete(url)
             response.raise_for_status()
             print(f"Product deleted successfully: {response.json()}")
