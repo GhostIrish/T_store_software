@@ -1,4 +1,5 @@
 import customtkinter as ctk
+import subprocess, sys
 from tabs.add_tab import AddProductFrame
 from tabs.search_tab import SearchProductFrame
 from tabs.report_tab import ReportProductFrame
@@ -63,5 +64,17 @@ def show_frame(frame):
 
 
 if __name__ == "__main__":
-    app = MainApplication()
-    app.mainloop()
+    # Iniciar o processo app.py
+    api_process = subprocess.Popen([sys.executable, "app.py"])
+
+    try:
+        # Iniciar a aplicação principal
+        app = MainApplication()
+        app.mainloop()
+    except KeyboardInterrupt:
+        pass
+    finally:
+        # Encerrar o processo app.py ao sair da aplicação
+        api_process.terminate()
+        api_process.wait()
+

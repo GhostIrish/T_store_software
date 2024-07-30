@@ -1,9 +1,5 @@
 version: '3.9'
 
-networks:
-  t_store_network:
-    driver: bridge
-
 services:
   db:
     image: mysql:8.0
@@ -23,14 +19,11 @@ services:
       - ./t_storeDB:/var/lib/mysql
     ports:
       - "3306:3306"
-    networks:
-      - t_store_network
 
   app:
     build: 
       context: .
       dockerfile: backend/Dockerfile 
-    container_name: app_api
 
     depends_on:
       - db
@@ -42,6 +35,4 @@ services:
       DB_USER: root
       DB_PASSWORD: example
       DB_NAME: exampledb
-    
-    networks:
-      - t_store_network
+

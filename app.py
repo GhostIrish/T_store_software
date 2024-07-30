@@ -3,7 +3,7 @@ from flask import Flask, jsonify, request
 import pymysql
 import pymysql.cursors
 from dotenv import load_dotenv
-
+from main import MainApplication
 
 # load your .env file
 load_dotenv()
@@ -191,3 +191,4 @@ def delete_product(product_id):
 if __name__ == '__main__':
     app.run()
     get_products()
+
