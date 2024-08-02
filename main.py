@@ -23,6 +23,7 @@ class MainApplication(ctk.CTk):
 
         show_frame(self.add_frame)
 
+    # crate main navbar to the software
     def create_navbar(self):
         frame_nav = ctk.CTkFrame(self, width=200, height=720, corner_radius=10, border_width=1, border_color='green')
         frame_nav.grid(row=0, column=0, sticky="nswe", padx=10, pady=10)
@@ -39,6 +40,7 @@ class MainApplication(ctk.CTk):
         config_button = ctk.CTkButton(frame_nav, text="Configs", command=lambda: show_frame(self.config_frame))
         config_button.grid(row=4, column=0, pady=10, padx=20, sticky="ew")
 
+    # create a content area to put the content you see inside of the green box
     def create_content_area(self):
         content_frame = ctk.CTkFrame(self, width=1080, height=720, corner_radius=10, border_width=1,
                                      border_color='green')
@@ -49,6 +51,7 @@ class MainApplication(ctk.CTk):
 
         self.center_frame = center_frame
 
+    # call frames to tabs folder in main diretory
     def create_frames(self):
         self.add_frame = AddProductFrame(self.center_frame)
         self.search_frame = SearchProductFrame(self.center_frame)

@@ -10,16 +10,19 @@ class SearchProductFrame(ctk.CTkFrame):
         self.setup_ui()
 
     def setup_ui(self):
+        # Sets up the user interface
         self.setup_labels()
         self.setup_search_bar()
         self.setup_treeview()
         self.setup_treeview_styles()
 
     def setup_labels(self):
+        # Creates and positions the main label
         label_search = ctk.CTkLabel(self, text="Search Product", text_color="white", font=("Arial", 20))
         label_search.pack(pady=20, padx=20)
 
     def setup_search_bar(self):
+        # Creates the search bar and search button
         search_frame = ctk.CTkFrame(self, fg_color="transparent")
         search_frame.pack(pady=10)
 
@@ -30,6 +33,7 @@ class SearchProductFrame(ctk.CTkFrame):
         btn.pack(side="left", padx=5)
 
     def setup_treeview(self):
+        # Creates and configures the treeview for displaying products
         self.tree_view_frame = ctk.CTkFrame(self, width=850, height=400)
         self.tree_view = ttk.Treeview(
             self.tree_view_frame,
@@ -49,6 +53,7 @@ class SearchProductFrame(ctk.CTkFrame):
         self.tree_view.bind("<Double-1>", self.on_double_click)
 
     def setup_treeview_styles(self):
+        # Sets the styles for the treeview
         style = ttk.Style()
         style.theme_use("default")
         
@@ -68,12 +73,13 @@ class SearchProductFrame(ctk.CTkFrame):
                   background=[('active', 'green')])
 
     def search_products(self):
+        # Searches for products using the search bar text
         texto = self.search_bar.get()
         query = texto.capitalize()
         
         if query:
             url = f'http://127.0.0.1:5000/api/products?query={query}'
-        else :
+        else:
             url = 'http://127.0.0.1:5000/api/products'
         
         try:
@@ -89,6 +95,7 @@ class SearchProductFrame(ctk.CTkFrame):
         self.update_treeview(products)
 
     def update_treeview(self, products):
+        # Updates the treeview with the search results
         for item in self.tree_view.get_children():
             self.tree_view.delete(item)
 
@@ -101,17 +108,18 @@ class SearchProductFrame(ctk.CTkFrame):
             self.tree_view.insert("", "end", values=product_values)
         
     def on_double_click(self, event):
+        # Handles double-click events on the treeview
         if hasattr(self.master, 'update_frame') and self.master.update_frame is not None:
             self.master.update_frame.destroy()
          
-        # Captura o identificador do item selecionado na tabela
+        # Captures the selected item's ID in the treeview
         item_id = self.tree_view.focus()
         
-        # Obtém os dados do item selecionado
+        # Retrieves the selected item's data
         item = self.tree_view.item(item_id)
         
-        # tudo começa aqui, trabalhar encima disso para fazer o update
-        # Transforma os dados do item em um dicionário com os nomes dos campos do produto
+        # Work with the selected item to update it
+        # Converts the item data into a dictionary with product field names
         product_data = dict(zip(
             ["id", "product", "product_type", "sizes", "gender_product", "brand", "buying_price", "selling_price", "quantity"],
             item["values"]
@@ -119,11 +127,11 @@ class SearchProductFrame(ctk.CTkFrame):
         
         print(f'Product data search tab: {product_data}')  
           
-          
-        # Cria e exibe o frame de atualização com os dados do produto
+        # Creates and displays the update frame with the product data
         self.master.update_frame = UpdateProductFrame(self.master, product_data)
         self.master.update_frame.pack(fill="both", expand=True)
 
     def display_error(self, message):
+        # Displays an error message
         error_label = ctk.CTkLabel(self, text=message, text_color="red", font=("Arial", 14))
         error_label.pack(pady=10)

@@ -1,66 +1,62 @@
-# Projeto T-Store
+# T-Store Project
 
-## Introdução
+## Introduction
 
-Este é o projeto T-Store, uma aplicação para gerenciamento de produtos utilizando uma interface gráfica construída com CustomTkinter e um banco de dados MySQL em contêineres Docker.
+This is the T-Store project, an application for product management using a graphical interface built with CustomTkinter and a MySQL database in Docker containers.
 
-## Pré-requisitos
+## Prerequisites
 
-Antes de iniciar, certifique-se de que a máquina possui os seguintes softwares instalados:
+Before starting, ensure that your machine has the following software installed:
 
 - **Python**
-- **Git**: [Instalar Git](https://git-scm.com/)
-- **Docker**: [Instalar Docker](https://www.docker.com/products/docker-desktop)
+- **Git**: [Install Git](https://git-scm.com/)
+- **Docker**: [Install Docker](https://www.docker.com/products/docker-desktop)
 
-Caso não possua, na pasta de downloads se encontram todos os instaladores necessários.
+If you don't have these installed, you can find all the necessary installers in the Downloads folder.
 
-## Passos para Configuração e Execução
+## Setup and Execution Steps
 
-Siga os passos abaixo para configurar e executar a aplicação:
+Follow these steps to set up and run the application:
 
-1. **Instalar as dependendências**:
-   - Instale o Docker,o Git e o Python caso não possua em sua máquina.
+1. **Install Dependencies**:
+   - Install Docker, Git, and Python if they are not already installed on your machine.
 
-2. **Executar o `setup.bat`**:
+2. **Run the `setup.bat`**:
 
-   - Execute o script clicando no `setup.bat`:
+   - Execute the script by clicking on `setup.bat`:
      ```cmd
      setup.bat
      ```
 
-## O que o Script Faz
+## What the Script Does
 
-Quando o `setup.bat` é executado, ele realiza os seguintes passos:
+When `setup.bat` is executed, it performs the following steps:
 
-1. **Constrói e inicia o conteiner da base de dados MySQL**:
-   - O script faz todo o processo de preparar, configurar e iniciar a base de dados no seu docker desktop.
+1. **Builds and Starts the MySQL Database Container**:
+   - The script prepares, configures, and starts the MySQL database container on your Docker Desktop.
 
-2. **Instala os requirements necessários para o projeto**:
-   - O script executa o comando para instalar o requirements.txt.
+2. **Installs Project Dependencies**:
+   - The script runs the command to install the required packages listed in `requirements.txt`.
 
-3. **Cria e molda o banco para os padrões do software**:
-   - O script executa o arquivo que configura o padrão da base de dados MySQL.
+3. **Sets Up the Database**:
+   - The script executes the setup file that configures the MySQL database according to the project requirements.
 
+## Verification
 
-## Verificação
+After running the script, check the following:
 
-Após a execução do script, verifique o seguinte:
+1. **Running Containers**:
+   - Open Docker Desktop and verify that the MySQL and application containers are running.
 
-1. **Containers em Execução**:
-   - Abra o Docker Desktop e verifique se os containers do MySQL e da aplicação estão em execução.
+2. **Database Access**:
+   - Ensure that the MySQL database has started correctly and that the application is connected to it.
 
-2. **Acesso ao Banco de Dados**:
-   - Certifique-se de que o banco de dados MySQL foi iniciado corretamente e que a aplicação está conectada a ele.
+3. **Application Execution**:
+   - Start the API located in the *dist* folder by clicking on the executable.
 
-3. **Execução da Aplicação**:
-   - Inicie a API localizada na pasta *dist* clicando no executável.
+4. **Run the Software**:
+   - After completing these steps, you can finally run the software executable and test the application!
 
-4. **Inicie o Software**:
-   - Após esses processos você pode finalmente executar o executável do software e testar o programa!
+## Support
 
-## Suporte
-
-Se você encontrar problemas ou tiver dúvidas, sinta-se à vontade para abrir uma issue no repositório do GitHub ou entrar em contato com o suporte.
-
-
-
+If you encounter issues or have questions, feel free to open an issue on the GitHub repository or contact support.

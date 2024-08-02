@@ -5,12 +5,11 @@ import pymysql.cursors
 from dotenv import load_dotenv
 from main import MainApplication
 
-# load your .env file
+# Load environment variables from .env file
 load_dotenv()
 app = Flask(__name__)
 
-
-# making connection with my database
+# Establish connection with the MySQL database
 def get_connection():
     connection = pymysql.connect(
         host=os.environ['MYSQL_HOST'],
@@ -25,7 +24,7 @@ def get_connection():
     )
     return connection
 
-# create function to get infos from our database.
+# Fetch product information from the database
 @app.route('/api/products', methods=['GET'])
 def get_products():
     query = request.args.get('query', '')
@@ -58,8 +57,7 @@ def get_products():
         
     return jsonify(products)
 
-# create function to add dict into database
-# this function recept the dict from any method, with me, the front send me infos in one dict, i send him to database.
+# Insert a new product into the database
 @app.route('/api/add_product', methods=['POST'])
 def add_product():
     connection = get_connection()
@@ -81,6 +79,7 @@ def add_product():
     finally:
         connection.close()
 
+# Update existing product information in the database
 @app.route('/api/update_product/<int:product_id>', methods=['PUT'])
 def update_product(product_id):
     connection = get_connection()
@@ -112,7 +111,7 @@ def update_product(product_id):
     finally:
         connection.close()
 
-# call specify datas for option menu in add_tab
+# Fetch product types for use in the UI's option menu
 @app.route('/api/types', methods=['GET'])
 def get_product_types():
     connection = get_connection()
@@ -123,10 +122,11 @@ def get_product_types():
         return jsonify(types)
     except pymysql.MySQLError as e:
         print(f'Error: {e}')
-        return jsonify({'error': 'An error occurred while ftching product types'}), 500
+        return jsonify({'error': 'An error occurred while fetching product types'}), 500
     finally:
         connection.close()
 
+# Fetch sizes for use in the UI's option menu
 @app.route('/api/sizes', methods=['GET'])
 def get_sizes():
     connection = get_connection()
@@ -137,10 +137,11 @@ def get_sizes():
         return jsonify(sizes)
     except pymysql.MySQLError as e:
         print(f'Error: {e}')
-        return jsonify({'error': 'An error occurred while ftching product types'}), 500
+        return jsonify({'error': 'An error occurred while fetching sizes'}), 500
     finally:
         connection.close()
     
+# Fetch gender options for use in the UI's option menu
 @app.route('/api/genders', methods=['GET'])
 def get_genders():
     connection = get_connection()
@@ -151,10 +152,11 @@ def get_genders():
         return jsonify(genders)
     except pymysql.MySQLError as e:
         print(f'Error: {e}')
-        return jsonify({'error': 'An error occurred while ftching product types'}), 500
+        return jsonify({'error': 'An error occurred while fetching genders'}), 500
     finally:
         connection.close()
     
+# Fetch brand options for use in the UI's option menu
 @app.route('/api/brands', methods=['GET'])
 def get_brands():
     connection = get_connection()
@@ -165,11 +167,11 @@ def get_brands():
         return jsonify(brands)
     except pymysql.MySQLError as e:
         print(f'Error: {e}')
-        return jsonify({'error': 'An error occurred while ftching product types'}), 500
+        return jsonify({'error': 'An error occurred while fetching brands'}), 500
     finally:
         connection.close()
 
-# delete product from database using the id.
+# Delete a product from the database using its ID
 @app.route('/api/delete_product/<int:product_id>', methods=['DELETE'])
 def delete_product(product_id):
     connection = get_connection()
@@ -178,17 +180,14 @@ def delete_product(product_id):
             sql = 'DELETE FROM product WHERE id = %s'
             cursor.execute(sql, (product_id,))
         connection.commit()
-        return jsonify(message=f'Product with id {product_id} deleted sucessfully'), 200
+        return jsonify(message=f'Product with id {product_id} deleted successfully'), 200
     
     except pymysql.MySQLError as error:
         return jsonify(error=str(error)), 500
     
     finally:
         connection.close()
-        
 
-# it's for tests, just ignore
+# Entry point for running the Flask app (for testing purposes)
 if __name__ == '__main__':
     app.run()
-
-

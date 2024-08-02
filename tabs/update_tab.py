@@ -18,7 +18,7 @@ class UpdateProductFrame(ctk.CTkFrame):
         self.fetch_option_data()
 
     def setup_label(self):
-        # Cria e posiciona o rótulo principal
+        # Create and position the main label
         label_add = ctk.CTkLabel(self, text="Update Product", text_color="white", font=("Arial", 20))
         label_add.pack(pady=20, padx=200)
         
@@ -29,17 +29,17 @@ class UpdateProductFrame(ctk.CTkFrame):
         close_button.grid(row=0, column=1, padx=(0, 20), pady=10, sticky="ne")
 
     def setup_field(self):
-        # Cria um frame para os campos de entrada
+        # Create a frame for the input fields
         self.fields_frame = ctk.CTkFrame(self, fg_color="transparent")
         self.fields_frame.pack(pady=10, padx=100, fill="both", expand=True)
 
     def setup_entries(self):
-        # Define rótulos para os campos de entrada
+        # Set labels for input fields
         labels = ["Product ", "Buying price ", "Selling price ", "Quantity "]
         self.entries = []
         self.entry_labels = labels
 
-        # Cria e posiciona os campos de entrada
+        # Create and position the input fields
         for i, label in enumerate(labels):
             lbl = ctk.CTkLabel(self.fields_frame, text=label, text_color="white")
             lbl.grid(row=i, column=0, padx=10, pady=5, sticky="e")
@@ -48,11 +48,11 @@ class UpdateProductFrame(ctk.CTkFrame):
             entry.grid(row=i, column=1, padx=10, pady=5, sticky="ew")
             self.entries.append(entry)
 
-        # Adiciona uma coluna vazia para espaçamento
-        self.fields_frame.grid_columnconfigure(2, minsize=50)  # Ajuste o minsize conforme necessário
+        # Add an empty column for spacing
+        self.fields_frame.grid_columnconfigure(2, minsize=50)  # Adjust minsize as necessary
 
     def fill_entries_with_product_data(self):
-        # Preenche os campos de entrada com os dados do produto
+        # Fill input fields with product data
         self.entries[0].insert(0, self.product_data.get("product", ""))
         self.entries[1].insert(0, self.product_data.get("buying_price", ""))
         self.entries[2].insert(0, self.product_data.get("selling_price", ""))
@@ -64,13 +64,13 @@ class UpdateProductFrame(ctk.CTkFrame):
         #self.collect_data()
 
     def setup_option_widget(self):
-        # Cria menus suspensos para selecionar opções
+        # Create dropdown menus to select options
         self.option_widgets = []
         titles = ["Type ", "Size ", "Gender ", "Brand "]
         self.option_endpoints = ["/api/types", "/api/sizes", "/api/genders", "/api/brands"]
         self.opt_labels = titles
 
-        # Cria e posiciona os menus suspensos
+        # Create and position the dropdown menus
         for i, title in enumerate(titles):
             lbl = ctk.CTkLabel(self.fields_frame, text=title, text_color="white")
             lbl.grid(row=i, column=3, padx=10, pady=5, sticky="e")
@@ -90,7 +90,7 @@ class UpdateProductFrame(ctk.CTkFrame):
                 data = response.json()
                 print(f"Data received from {endpoint}: {data}")
 
-                # Extrai os nomes da resposta
+                # Extract names from the response
                 values = []
                 for item in data:
                     if 'type_name' in item:
@@ -106,49 +106,49 @@ class UpdateProductFrame(ctk.CTkFrame):
             except requests.RequestException as e:
                 print(f"Error fetching data from {endpoint}: {e}")
 
-        # Inicia a busca de dados para cada menu suspenso em um thread separado
+        # Start fetching data for each dropdown menu in a separate thread
         for endpoint, (_, option_box) in zip(self.option_endpoints, self.option_widgets):
             threading.Thread(target=fetch_data, args=(endpoint, option_box)).start()
 
     def setup_textbox(self):
-        # Cria e configura a caixa de texto para exibir os detalhes do produto
+        # Create and configure the textbox to display product details
         self.textbox = ctk.CTkTextbox(self.fields_frame, width=100, height=250, scrollbar_button_color="green", fg_color="black",
                                       border_width=1, border_color="green", border_spacing=20, activate_scrollbars=True,
                                       scrollbar_button_hover_color='black', state="disabled")
         self.textbox.grid(row=5, column=0, columnspan=5, padx=10, pady=20, sticky="ew")
 
     def insert_into_box(self, text):
-        # Insere texto na caixa de texto
-        self.textbox.configure(state="normal")  # Permitir a inserção de texto
+        # Insert text into the textbox
+        self.textbox.configure(state="normal")  # Enable text insertion
         self.textbox.insert("end", text + "\n")
-        self.textbox.configure(state="disabled")  # Desativar novamente após a inserção
+        self.textbox.configure(state="disabled")  # Disable after insertion
 
     def clear_textbox(self):
-        # Limpa o conteúdo da caixa de texto
-        self.textbox.configure(state="normal")  # Permitir a limpeza de texto
+        # Clear the contents of the textbox
+        self.textbox.configure(state="normal")  # Enable text clearing
         self.textbox.delete("1.0", "end")
-        self.textbox.configure(state="disabled")  # Desativar novamente após a limpeza
+        self.textbox.configure(state="disabled")  # Disable after clearing
 
     def collect_data(self):
-        # Limpa a caixa de texto antes de inserir novos dados
+        # Clear the textbox before inserting new data
         self.clear_textbox()
         data = """
 You really want to insert this product in database?
 Press the new button if yes or "Cancel" to try again. \n \n"""
-        # Obtém os dados das entradas
+        # Get data from entries
         for label, entry in zip(self.entry_labels, self.entries):
             data += f'{label}: {entry.get()}\n'
 
-        # Obtém os dados dos menus suspensos
+        # Get data from dropdown menus
         for label, (option_var, _) in zip(self.opt_labels, self.option_widgets):
             data += f'{label}: {option_var.get()}\n'
 
-        # Insere os dados na caixa de texto
+        # Insert data into the textbox
         self.insert_into_box(data)
 
     def send_db_data(self):
         self.show_loading_screen()
-        # Envia os dados em um thread separado para não bloquear a UI
+        # Send data in a separate thread to avoid blocking the UI
         threading.Thread(target=self._send_db_data).start()
 
     def _send_db_data(self):
@@ -165,7 +165,7 @@ Press the new button if yes or "Cancel" to try again. \n \n"""
 
         update_progress(1)
         
-        # Função para obter ID a partir do nome
+        # Function to get ID from name
         def get_id_from_name(endpoint, name):
             print(f"Fetching ID for {name} from {endpoint}")
             try:
@@ -187,7 +187,7 @@ Press the new button if yes or "Cancel" to try again. \n \n"""
                 print(f"Error fetching data from {endpoint}: {e}")
                 return None
         
-        # Coleta dados e mapeia nomes para IDs
+        # Collect data and map names to IDs
         product_data = {
             'model_product': self.entries[0].get(),
             'buying_price': self.entries[1].get(),
@@ -201,13 +201,15 @@ Press the new button if yes or "Cancel" to try again. \n \n"""
         
         update_progress(2)
         
-        # Envia os dados para o banco de dados
         try:
+            # Prepare the URL for sending data
             print('trying to connect')
             print()
             url = f"{base_url}/api/update_product/{self.product_data['id']}"
             print('sucessfully')
             print('')
+            
+            # Send the collected data to the server
             response = requests.put(url, json=product_data)
             response.raise_for_status()
             print(f"Data sent to database: {response.json()}")
@@ -219,18 +221,18 @@ Press the new button if yes or "Cancel" to try again. \n \n"""
         update_progress(total_steps - current_step) 
 
     def update_loading_screen(self, message, success):
-        # Usa o método `after` para garantir que as atualizações sejam feitas na thread principal
+        # Use 'after' method to certify if the updates is going to be done in the main thread.
         self.loading_screen.after(0, lambda: self.loading_screen_message.set(message))
         if success:
             self.loading_screen.after(0, lambda: self.progress_var.set(1.0))
             self.loading_screen.after(0, lambda: self.loading_screen_button.configure(state="normal"))
 
     def show_loading_screen(self):
-        # Cria uma janela pop-up de carregamento
+        # Show a loading screen with progress bar
         self.loading_screen = ctk.CTkToplevel(self)
         self.loading_screen.title("Loading")
 
-        # Centraliza a janela pop-up
+        # put the popup window in center of the software
         self.loading_screen.geometry("300x200+{}+{}".format(
             self.loading_screen.winfo_screenwidth() // 2 - 150,
             self.loading_screen.winfo_screenheight() // 2 - 100
@@ -239,7 +241,6 @@ Press the new button if yes or "Cancel" to try again. \n \n"""
         self.loading_screen.grab_set()
         self.loading_screen.resizable(False, False)
 
-        # Mensagem e botão da janela de carregamento
         self.loading_screen_message = ctk.StringVar(value="Updating data in database...")
         message_label = ctk.CTkLabel(self.loading_screen, textvariable=self.loading_screen_message)
         message_label.pack(pady=20)
@@ -253,11 +254,11 @@ Press the new button if yes or "Cancel" to try again. \n \n"""
         self.loading_screen_button = ctk.CTkButton(self.loading_screen, text="OK", command=self.close_loading_screen, state="disabled")
         self.loading_screen_button.pack(pady=20)
 
-        # Atualiza a janela de carregamento para garantir que ela seja exibida antes de enviar os dados
+        # update the loading window to show before sending data to database.
         self.loading_screen.update()
 
     def close_loading_screen(self):
-        # Fecha a janela de carregamento e limpa as entradas
+        # Close loading window and clear entrys.
         self.loading_screen.destroy()
         for entry in self.entries:
             entry.delete(0, "end")
@@ -268,7 +269,7 @@ Press the new button if yes or "Cancel" to try again. \n \n"""
 
     def delete_product(self):
         self.show_loading_screen()
-        # Envia os dados em um thread separado para não bloquear a UI
+        # Sebd data in single separeted thread to not block UI.
         threading.Thread(target=self._delete_product).start()
 
     def _delete_product(self):
@@ -284,13 +285,13 @@ Press the new button if yes or "Cancel" to try again. \n \n"""
      
             
     def show_send_btn(self):
-        # Coleta os dados e exibe o botão de envio
+        # Collect all data and show sending button after this.
         self.collect_data()
         send_button = ctk.CTkButton(self.fields_frame, text="Update in database", command=self.send_db_data, fg_color="#2A6CB7", hover_color="blue")
         send_button.grid(row=8, column=0, columnspan=5, pady=5, padx=20, sticky="ew")
 
     def setup_buttons(self):
-        # Cria botões de pré-visualização e cancelamento
+        # setup cancel and preview button. 
         preview_button = ctk.CTkButton(self.fields_frame, text="Preview", command=self.show_send_btn)
         preview_button.grid(row=6, column=0, columnspan=5, pady=5, padx=20, sticky="ew")
 
