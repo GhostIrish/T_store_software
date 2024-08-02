@@ -1,5 +1,5 @@
 import customtkinter as ctk
-import subprocess, sys
+from multiprocessing import Process
 from tabs.add_tab import AddProductFrame
 from tabs.search_tab import SearchProductFrame
 from tabs.report_tab import ReportProductFrame
@@ -58,23 +58,10 @@ class MainApplication(ctk.CTk):
         for frame in (self.add_frame, self.search_frame, self.report_frame, self.config_frame):
             frame.place(relx=0, rely=0, relwidth=1, relheight=1)
 
-
 def show_frame(frame):
     frame.tkraise()
 
 
 if __name__ == "__main__":
-    # Iniciar o processo app.py
-    api_process = subprocess.Popen([sys.executable, "app.py"])
-
-    try:
-        # Iniciar a aplicação principal
-        app = MainApplication()
-        app.mainloop()
-    except KeyboardInterrupt:
-        pass
-    finally:
-        # Encerrar o processo app.py ao sair da aplicação
-        api_process.terminate()
-        api_process.wait()
-
+    app = MainApplication()
+    app.mainloop()

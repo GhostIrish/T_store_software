@@ -190,5 +190,5 @@ def delete_product(product_id):
 # it's for tests, just ignore
 if __name__ == '__main__':
     app.run()
-    get_products()
+
 

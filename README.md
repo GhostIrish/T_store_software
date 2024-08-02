@@ -8,25 +8,22 @@ Este é o projeto T-Store, uma aplicação para gerenciamento de produtos utiliz
 
 Antes de iniciar, certifique-se de que a máquina possui os seguintes softwares instalados:
 
+- **Python**
 - **Git**: [Instalar Git](https://git-scm.com/)
 - **Docker**: [Instalar Docker](https://www.docker.com/products/docker-desktop)
+
+Caso não possua, na pasta de downloads se encontram todos os instaladores necessários.
 
 ## Passos para Configuração e Execução
 
 Siga os passos abaixo para configurar e executar a aplicação:
 
-1. **Baixar o `setup.bat`**:
-
-   Baixe o arquivo `setup.bat` e salve-o em um diretório de sua escolha, por exemplo, `C:\project_setup`.
+1. **Instalar as dependendências**:
+   - Instale o Docker,o Git e o Python caso não possua em sua máquina.
 
 2. **Executar o `setup.bat`**:
 
-   - Abra um prompt de comando (CMD) no Windows.
-   - Navegue até o diretório onde o arquivo `setup.bat` está localizado:
-     ```cmd
-     cd C:\project_setup
-     ```
-   - Execute o script digitando `setup.bat` e pressionando Enter:
+   - Execute o script clicando no `setup.bat`:
      ```cmd
      setup.bat
      ```
@@ -35,14 +32,14 @@ Siga os passos abaixo para configurar e executar a aplicação:
 
 Quando o `setup.bat` é executado, ele realiza os seguintes passos:
 
-1. **Clona o Repositório**:
-   - O script clona o repositório do GitHub para o diretório atual.
+1. **Constrói e inicia o conteiner da base de dados MySQL**:
+   - O script faz todo o processo de preparar, configurar e iniciar a base de dados no seu docker desktop.
 
-2. **Navega para o Diretório do Projeto**:
-   - O script muda o diretório para a pasta do projeto clonado.
+2. **Instala os requirements necessários para o projeto**:
+   - O script executa o comando para instalar o requirements.txt.
 
-3. **Inicia Docker Compose**:
-   - O script inicia os serviços definidos no arquivo `docker-compose.yml`.
+3. **Cria e molda o banco para os padrões do software**:
+   - O script executa o arquivo que configura o padrão da base de dados MySQL.
 
 
 ## Verificação
@@ -56,10 +53,10 @@ Após a execução do script, verifique o seguinte:
    - Certifique-se de que o banco de dados MySQL foi iniciado corretamente e que a aplicação está conectada a ele.
 
 3. **Execução da Aplicação**:
-   - Navegue até o diretório do projeto clonado e execute o comando para iniciar a aplicação. Dependendo de como a aplicação é iniciada, execute:
-     ```cmd
-     python main.py
-     ```
+   - Inicie a API localizada na pasta *dist* clicando no executável.
+
+4. **Inicie o Software**:
+   - Após esses processos você pode finalmente executar o executável do software e testar o programa!
 
 ## Suporte
 
