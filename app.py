@@ -5,6 +5,7 @@ import pymysql.cursors
 from dotenv import load_dotenv
 from main import MainApplication
 
+#
 # Load environment variables from .env file
 load_dotenv()
 app = Flask(__name__)
